@@ -17,17 +17,14 @@ mGWCharacter::form="Invalid argument for character, string or integer expected."
 
 mGWGuild::usage="mGWGuild[id] returns v1 API information about the guild with the given id."
 
-testToken::usage="API token for testing."
-
 mGWInventory::usage="mGWInventory[token, character] returns an Association of the inventory including id, cound, binding and bound_to."
 
 mGWInvCount::usage="mGWInvCount[token,character] returns the association <|id -> counts|>."
 
+mGWMats::usage="mGWMats[api] returns the Dataset for material strage with catagory, id, and count."
+
 Begin["`Private`"]
 (* Implementation of the package *)
-
-testToken = "C53020FE-F672-514F-B5C9-D7C209927B91CC796525-2980-4FD6-8B85-\
-3C9D96BFCD4E"
 
 mGWItemString[term_] :=
     Module[ {url, result},
@@ -112,6 +109,18 @@ mGWInventory[api_, character_] :=
 mGWInvCount[api_, character_] := Module[{data},
   data = mGWInventory[api, character];
   Merge[#["id"] -> #["count"] & /@ data, Total]]
+
+(* ::Section:: *)
+(*Account*)
+
+
+(* ::Subsection:: *)
+(*Material Storage*)
+mGWMats[api_] := 
+ Dataset[Association /@ 
+   URLExecute[
+    "https://api.guildwars2.com/v2/account/materials", \
+{"access_token" -> token}]]
 
 (* ::Section:: *)
 (* Footer *)
