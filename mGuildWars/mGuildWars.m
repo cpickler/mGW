@@ -6,11 +6,14 @@
 
 BeginPackage["mGuildWars`"]
 (* Exported symbols added here with SymbolName::usage *) 
+mGWIds::usage="List of all valid item Ids; when needed it called and then stored."
 
 mGWItemString::usage="idString[name] returns the Association <|Subscript[name, 1]-> Subscript[id, 1]|>
 mGWItemString[name,element] returns a list of the requested element."
 
 mGWItem::usage="item[id] returns information for item with the given id."
+
+mGWIdQ::usage="mGWIdQ[id] tests to see if the given id is valid."
 
 mGWCharacter::usage="To be added"
 mGWCharacter::form="Invalid argument for character, string or integer expected."
@@ -23,8 +26,16 @@ mGWInvCount::usage="mGWInvCount[token,character] returns the association <|id ->
 
 mGWMats::usage="mGWMats[api] returns the Dataset for material strage with catagory, id, and count."
 
+mGWTp::usage="mGWTp[item_ids] returns the raw JSON from the API.
+mGWTp[item_ids, element] returns the association with ids as keysmapped to the value for the element. Options include \"SellPrice\", \"SellQuantity\", \"BuyPrice\", and \"BuyQuantity\"."
+mGWTp::ider="At least 1 Item Id given does not exist."
 Begin["`Private`"]
 (* Implementation of the package *)
+
+(* ::Section:: *)
+(* Items *)
+
+mGWIds[] := mGWIds[] = URLExecute["https://api.guildwars2.com/v2/items/"]
 
 mGWItemString[term_] :=
     Module[ {url, result},
@@ -50,7 +61,12 @@ mGWItem[id_] :=
         URLExecute[url]
     ]
 
-
+mGWIdQ[id_] :=
+    Which[
+    ListQ[id], Map[MemberQ[mGWIds[], #] &, id],
+    IntegerQ[id], MemberQ[mGWIds[], id]
+    ]
+    
 (* ::Section:: *)
 (* Character API *)
 
@@ -121,6 +137,41 @@ mGWMats[api_] :=
    URLExecute[
     "https://api.guildwars2.com/v2/account/materials", \
 {"access_token" -> token}]]
+
+(* ::Section:: *)
+(* Trading Post *)
+
+mGWTp[items_] :=
+    Module[ {idString},
+        idString = StringRiffle[items, ","];
+        URLExecute[
+         "https://api.guildwars2.com/v2/commerce/prices", {"ids" -> 
+           idString}]
+    ]
+
+mGWTp[items_, element_] :=
+    Module[ {data, result},
+        data = mGWTp[items];
+        result =
+         Which[
+          data == {"text" -> "all ids provided are invalid"}, (Message[
+            mGWTp::ider];
+                                                               Return[$Failed]),
+          element == "SellPrice", 
+          AssociationThread["id" /. data, "unit_price" /. ("sells" /. data)],
+          element == "SellQuantity", 
+          AssociationThread["id" /. data, "quantity" /. ("sells" /. data)],
+          element == "BuyPrice", 
+          AssociationThread["id" /. data, "unit_price" /. ("buys" /. data)],
+          element == "BuyQuantity", 
+          AssociationThread["id" /. data, "quantity" /. ("buys" /. data)],
+          True, $Failed
+          ];
+        If[ ! AssociationQ[result],
+            (Message[mGWTp::ider];
+             $Failed)
+        ]
+    ]
 
 (* ::Section:: *)
 (* Footer *)
