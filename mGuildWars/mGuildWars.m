@@ -120,7 +120,7 @@ mGWGuild[id_] :=
 mGWInventory[api_, character_] :=
     Map[Association, 
       Flatten["inventory" /. {"bags" /. mGWCharacter[api, character]}, 
-        2] // DeleteCases[Null]]
+        2] // DeleteCases[#, Null]&]
 
 mGWInvCount[api_, character_] := Module[{data},
   data = mGWInventory[api, character];
