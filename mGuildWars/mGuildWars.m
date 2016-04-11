@@ -30,8 +30,11 @@ mGWTp::usage="mGWTp[item_ids] returns the raw JSON from the API.
 mGWTp[item_ids, element] returns the association with ids as keysmapped to the value for the element. Options include \"SellPrice\", \"SellQuantity\", \"BuyPrice\", and \"BuyQuantity\"."
 mGWTp::ider="At least 1 Item Id given does not exist."
 
-mGWAchievements::usage = "mGWAchievements[] returns a list of all achievement ids. \
-	mGWAchievments[\"Daily\"] returns raw data for the daily achievements."
+mGWAchievements::usage = 
+	"mGWAchievements[] returns a list of all achievement ids.
+	mGWAchievments[\"Daily\"] returns raw data for the daily achievements.
+	mGWAchievements[\"Groups\"] returns the list of all group achievement ids.
+	mGWAchievements[{ids}, \"Groups\"] returns the unformated information for the given ids."
 
 Begin["`Private`"]
 (* Implementation of the package *)
@@ -181,9 +184,15 @@ mGWTp[items_, element_] :=
 (* ::Section:: *)
 (* Achievements *)
 
-mGWAchievements[] := URLExecute["https://api.guildwars2.com/v2/achievements"]
-mGWAchievements["Daily"] := URLExecute["https://api.guildwars2.com/v2/achievements/daily"]
-
+mGWAchievements[] :=
+    URLExecute["https://api.guildwars2.com/v2/achievements"]
+mGWAchievements["Daily"] :=
+    URLExecute["https://api.guildwars2.com/v2/achievements/daily"]
+mGWAchievements["Groups"] :=
+    URLExecute["Https://api.guildwars2.com/v2/achievements/groups"]
+mGWAchievements[id_, "Groups"] :=
+    URLExecute[
+     "Https://api.guildwars2.com/v2/achievements/groups", {"ids" -> StringRiffle[id , ","], "Groups"}]
 (* ::Section:: *)
 (* Footer *)
   
