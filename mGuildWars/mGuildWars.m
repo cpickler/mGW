@@ -30,7 +30,8 @@ mGWTp::usage="mGWTp[item_ids] returns the raw JSON from the API.
 mGWTp[item_ids, element] returns the association with ids as keysmapped to the value for the element. Options include \"SellPrice\", \"SellQuantity\", \"BuyPrice\", and \"BuyQuantity\"."
 mGWTp::ider="At least 1 Item Id given does not exist."
 
-mGWAchievements::usage = "achievements[] returns a list of all achievement ids."
+mGWAchievements::usage = "mGWAchievements[] returns a list of all achievement ids. \
+	mGWAchievments[\"Daily\"] returns raw data for the daily achievements."
 
 Begin["`Private`"]
 (* Implementation of the package *)
@@ -181,6 +182,7 @@ mGWTp[items_, element_] :=
 (* Achievements *)
 
 mGWAchievements[] := URLExecute["https://api.guildwars2.com/v2/achievements"]
+mGWAchievments["Daily"] := URLExecute["https://api.guildwars2.com/v2/achievements/daily"]
 
 (* ::Section:: *)
 (* Footer *)
