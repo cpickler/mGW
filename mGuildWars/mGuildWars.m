@@ -182,7 +182,7 @@ mGWTp[items_, element_] :=
 (* Achievements *)
 
 mGWAchievements[] := URLExecute["https://api.guildwars2.com/v2/achievements"]
-mGWAchievments["Daily"] := URLExecute["https://api.guildwars2.com/v2/achievements/daily"]
+mGWAchievements["Daily"] := URLExecute["https://api.guildwars2.com/v2/achievements/daily"]
 
 (* ::Section:: *)
 (* Footer *)
