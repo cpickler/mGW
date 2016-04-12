@@ -9,9 +9,10 @@ Test[
 ]
 
 Test[
-    Length[Flatten["id" /. Values[Association[mGWAchievements["Daily"]]]]]
+    mGWAchievements["Daily"] // Keys // 
+ ContainsAll[#, {"pve", "wvw", "pvp"}] &
     ,
-    19
+    True
     ,
     TestID -> "Test-20160410-I7B2R6"
 ]
@@ -49,4 +50,12 @@ Test[
         70}}}
     ,
     TestID -> "Test-20160411-I8Y1I3"
+]
+
+Test[
+	mGWAchievements["Categories"]//ContainsAll[#, {1, 2, 3, 4, 5, 6, 7, 10}]&
+	,
+	True
+	,
+	TestID->"Test-20160411-L1P7L8"
 ]
