@@ -29,6 +29,14 @@ mGWMats::usage="mGWMats[api] returns the Dataset for material strage with catago
 mGWTp::usage="mGWTp[item_ids] returns the raw JSON from the API.
 mGWTp[item_ids, element] returns the association with ids as keysmapped to the value for the element. Options include \"SellPrice\", \"SellQuantity\", \"BuyPrice\", and \"BuyQuantity\"."
 mGWTp::ider="At least 1 Item Id given does not exist."
+
+mGWAchievements::usage = 
+	"mGWAchievements[] returns a list of all achievement ids.
+	mGWAchievements[\"Element\"] returns the list of all group achievement ids. \
+		Options for element are \"Groups\", \"Catagories\" and \"Dailies\"
+	mGWAchievements[{ids}, \"Element\"] returns the unformated information for the given ids. \
+		Options for element are \"Groups\", \"Catagories\" and \"Dailies\""
+
 Begin["`Private`"]
 (* Implementation of the package *)
 
@@ -172,6 +180,20 @@ mGWTp[items_, element_] :=
              $Failed)
         ]
     ]
+
+
+(* ::Section:: *)
+(* Achievements *)
+
+mGWAchievements[] :=
+    URLExecute["https://api.guildwars2.com/v2/achievements"]
+mGWAchievements["Daily"] :=
+    URLExecute["https://api.guildwars2.com/v2/achievements/daily"]
+mGWAchievements[element_] :=
+    URLExecute["Https://api.guildwars2.com/v2/achievements/" <> element]
+mGWAchievements[id_, element_] :=
+    URLExecute[
+     "Https://api.guildwars2.com/v2/achievements/" <> element, {"ids" -> StringRiffle[id , ","], "Groups"}]
 
 (* ::Section:: *)
 (* Footer *)
