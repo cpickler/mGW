@@ -59,3 +59,31 @@ Test[
 	,
 	TestID->"Test-20160411-L1P7L8"
 ]
+
+Test[
+	"id" /. mGWAccount[
+ 	"C53020FE-F672-514F-B5C9-D7C209927B91CC796525-2980-4FD6-8B85-3C9D96BFCD4E"]
+	,
+	"42AC08D1-E6A2-E511-80C3-ECB1D78A5C75"
+	,
+	TestID ->"Test-20160413-T4Z2D2"
+]
+
+Test[
+	ContainsAll[
+	 Keys[mGWAccount["C53020FE-F672-514F-B5C9-D7C209927B91CC796525-2980-4FD6-8B85-3C9D96BFCD4E", "Element" -> "Wallet"]], {1, 3, 5, 7}]
+	 ,
+	 True
+	 ,
+	 TestID->"Test-20160413-L9W9J1"
+]
+
+Test[
+	ListQ[mGWAccount["C53020FE-F672-514F-B5C9-D7C209927B91CC796525-2980-4FD6-8B85-3C9D96BFCD4E", "Invalid" -> "Wallet"]]
+	,
+	True
+	,
+	OptionValue::nodef
+	,
+	TestID->"Test-20160413-M3O1Q6"
+]

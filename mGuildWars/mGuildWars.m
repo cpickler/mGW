@@ -30,6 +30,11 @@ mGWTp::usage="mGWTp[item_ids] returns the raw JSON from the API.
 mGWTp[item_ids, element] returns the association with ids as keysmapped to the value for the element. Options include \"SellPrice\", \"SellQuantity\", \"BuyPrice\", and \"BuyQuantity\"."
 mGWTp::ider="At least 1 Item Id given does not exist."
 
+mGWAccount::usage="mGWAccount[\"api\"] returns account information for the given api key.
+	mGWAccount[\"api\",\"element\"] returns the information for the requested element and api key."
+Macros`SetArgumentCount[mGWAccount,{1,2}]
+Options[mGWAccount] = {"Element"->""}
+
 mGWAchievements::usage = 
 	"mGWAchievements[] returns a list of all achievement ids.
 	mGWAchievements[\"Element\"] returns the list of all group achievement ids. \
@@ -137,6 +142,27 @@ mGWInvCount[api_, character_] := Module[{data},
 (* ::Section:: *)
 (*Account*)
 
+(*mGWAccount[api_] :=  URLExecute[
+    "https://api.guildwars2.com/v2/account", \
+{"access_token" -> api}]*)
+
+mGWAccount[api_,OptionsPattern[]] :=
+    Module[ {data,element},
+        element = OptionValue["Element"];
+        data[] :=
+            data[] =
+            URLExecute[
+            "https://api.guildwars2.com/v2/account" <> (If[ element != "",
+                                                            ("/" <> element),
+                                                            ""
+                                                        ]), {"access_token" -> api}];
+        Which[
+        element == "Wallet", (#["id"] -> #["value"] & /@ Association /@ data[]) // Association,
+        element == "", data[],
+        True, $Failed
+        ]
+    ]
+
 
 (* ::Subsection:: *)
 (*Material Storage*)
@@ -144,7 +170,7 @@ mGWMats[api_] :=
  Dataset[Association /@ 
    URLExecute[
     "https://api.guildwars2.com/v2/account/materials", \
-{"access_token" -> token}]]
+{"access_token" -> api}]]
 
 (* ::Section:: *)
 (* Trading Post *)
