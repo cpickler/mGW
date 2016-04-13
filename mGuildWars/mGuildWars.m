@@ -32,8 +32,7 @@ mGWTp::ider="At least 1 Item Id given does not exist."
 
 mGWAccount::usage="mGWAccount[\"api\"] returns account information for the given api key.
 	mGWAccount[\"api\",\"element\"] returns the information for the requested element and api key."
-Macros`SetArgumentCount[mGWAccount,{1,2}]
-Options[mGWAccount] = {"Element"->""}
+Macros`SetArgumentCount[mGWAccount,{1,3}]
 
 mGWAchievements::usage = 
 	"mGWAchievements[] returns a list of all achievement ids.
@@ -146,9 +145,8 @@ mGWInvCount[api_, character_] := Module[{data},
     "https://api.guildwars2.com/v2/account", \
 {"access_token" -> api}]*)
 
-mGWAccount[api_,OptionsPattern[]] :=
-    Module[ {data,element},
-        element = OptionValue["Element"];
+mGWAccount[api_,element_:"",OptionsPattern[{"Format" -> "Association"}]] :=
+    Module[ {data},
         data[] :=
             data[] =
             URLExecute[
@@ -157,7 +155,7 @@ mGWAccount[api_,OptionsPattern[]] :=
                                                             ""
                                                         ]), {"access_token" -> api}];
         Which[
-        element == "Wallet", (#["id"] -> #["value"] & /@ Association /@ data[]) // Association,
+        element == "Wallet", If[OptionValue["Format"] == "Association", (#["id"] -> #["value"] & /@ Association /@ data[]) // Association, data],
         element == "", data[],
         True, $Failed
         ]
