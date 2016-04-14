@@ -71,7 +71,7 @@ Test[
 
 Test[
 	ContainsAll[
-	 Keys[mGWAccount["C53020FE-F672-514F-B5C9-D7C209927B91CC796525-2980-4FD6-8B85-3C9D96BFCD4E", "Wallet"]], {1, 3, 5, 7}]
+	 Keys[mGWAccount["C53020FE-F672-514F-B5C9-D7C209927B91CC796525-2980-4FD6-8B85-3C9D96BFCD4E", "Element" -> "Wallet"]], {1, 3, 5, 7}]
 	 ,
 	 True
 	 ,
@@ -79,7 +79,7 @@ Test[
 ]
 
 Test[
-	AssociationQ[mGWAccount["C53020FE-F672-514F-B5C9-D7C209927B91CC796525-2980-4FD6-8B85-3C9D96BFCD4E","Wallet", "Invalid" -> "Invalid"]]
+	ListQ[mGWAccount["C53020FE-F672-514F-B5C9-D7C209927B91CC796525-2980-4FD6-8B85-3C9D96BFCD4E", "Invalid" -> "Wallet"]]
 	,
 	True
 	,
