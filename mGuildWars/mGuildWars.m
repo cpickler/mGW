@@ -146,16 +146,18 @@ mGWInvCount[api_, character_] := Module[{data},
 {"access_token" -> api}]*)
 
 mGWAccount[api_,element_:"",OptionsPattern[{"Format" -> "Association"}]] :=
-    Module[ {data},
+    Module[ {data, format},
+        format = OptionValue["Format"];
         data[] :=
             data[] =
             URLExecute[
-            "https://api.guildwars2.com/v2/account" <> (If[ element != "",
-                                                            ("/" <> element),
-                                                            ""
-                                                        ]), {"access_token" -> api}];
+            StringTrim[ "https://api.guildwars2.com/v2/" <> StringRiffle[{"Account", element}, "/"],("/")], {"access_token" -> api}];
         Which[
-        element == "Wallet", If[OptionValue["Format"] == "Association", (#["id"] -> #["value"] & /@ Association /@ data[]) // Association, data],
+        format == "Raw", data[],
+        element == "Wallet", If[ format == "Association",
+                                 (#["id"] -> #["value"] & /@ Association /@ data[]) // Association,
+                                 data[]
+                             ],
         element == "", data[],
         True, $Failed
         ]
