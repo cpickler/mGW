@@ -6,36 +6,36 @@
 
 BeginPackage["mGuildWars`"]
 (* Exported symbols added here with SymbolName::usage *) 
-mGWIds::usage="List of all valid item Ids; when needed it called and then stored."
+mGWIds::usage = "List of all valid item Ids; when needed it called and then stored."
 
-mGWItemString::usage="idString[name] returns the Association <|Subscript[name, 1]-> Subscript[id, 1]|>
+mGWItemString::usage = "idString[name] returns the Association <|Subscript[name, 1]-> Subscript[id, 1]|>
 mGWItemString[name,element] returns a list of the requested element."
 
-mGWItem::usage="item[id] returns information for item with the given id."
+mGWItem::usage = "item[id] returns information for item with the given id."
 
-mGWIdQ::usage="mGWIdQ[id] tests to see if the given id is valid."
+mGWIdQ::usage = "mGWIdQ[id] tests to see if the given id is valid."
 
-mGWCharacter::usage="To be added"
-mGWCharacter::form="Invalid argument for character, string or integer expected."
+mGWCharacter::usage = "To be added"
+mGWCharacter::form = "Invalid argument for character, string or integer expected."
 
-mGWGuild::usage="mGWGuild[id] returns v1 API information about the guild with the given id."
+mGWGuild::usage = "mGWGuild[id] returns v1 API information about the guild with the given id."
 
-mGWInventory::usage="mGWInventory[token, character] returns an Association of the inventory including id, cound, binding and bound_to."
+mGWInventory::usage = "mGWInventory[token, character] returns an Association of the inventory including id, cound, binding and bound_to."
 
-mGWInvCount::usage="mGWInvCount[token,character] returns the association <|id -> counts|>."
+mGWInvCount::usage = "mGWInvCount[token,character] returns the association <|id -> counts|>."
 
-mGWMats::usage="mGWMats[api] returns the Dataset for material strage with catagory, id, and count."
+mGWMats::usage = "mGWMats[api] returns the Dataset for material strage with catagory, id, and count."
 
-mGWTp::usage="mGWTp[item_ids] returns the raw JSON from the API.
+mGWTp::usage = "mGWTp[item_ids] returns the raw JSON from the API.
 mGWTp[item_ids, element] returns the association with ids as keysmapped to the value for the element. Options include \"SellPrice\", \"SellQuantity\", \"BuyPrice\", and \"BuyQuantity\"."
-mGWTp::ider="At least 1 Item Id given does not exist."
+mGWTp::ider = "At least 1 Item Id given does not exist."
 
-mGWAccount::usage="mGWAccount[\"api\"] returns account information for the given api key.
+mGWAccount::usage = "mGWAccount[\"api\"] returns account information for the given api key.
 	mGWAccount[\"api\",\"element\"] returns the information for the requested element and api key."
 Macros`SetArgumentCount[mGWAccount,{1,3}]
 
 mGWAchievements::usage = 
-	"mGWAchievements[] returns a list of all achievement ids.
+    "mGWAchievements[] returns a list of all achievement ids.
 	mGWAchievements[\"Element\"] returns the list of all group achievement ids. \
 		Options for element are \"Groups\", \"Catagories\" and \"Dailies\"
 	mGWAchievements[{ids}, \"Element\"] returns the unformated information for the given ids. \
@@ -47,7 +47,8 @@ Begin["`Private`"]
 (* ::Section:: *)
 (* Items *)
 
-mGWIds[] := mGWIds[] = URLExecute["https://api.guildwars2.com/v2/items/"]
+mGWIds[] :=
+    mGWIds[] = URLExecute["https://api.guildwars2.com/v2/items/"]
 
 mGWItemString[term_] :=
     Module[ {url, result},
@@ -134,9 +135,11 @@ mGWInventory[api_, character_] :=
       Flatten["inventory" /. {"bags" /. mGWCharacter[api, character]}, 
         2] // DeleteCases[#, Null]&]
 
-mGWInvCount[api_, character_] := Module[{data},
-  data = mGWInventory[api, character];
-  Merge[#["id"] -> #["count"] & /@ data, Total]]
+mGWInvCount[api_, character_] :=
+    Module[ {data},
+        data = mGWInventory[api, character];
+        Merge[#["id"] -> #["count"] & /@ data, Total]
+    ]
 
 (* ::Section:: *)
 (*Account*)
@@ -155,7 +158,10 @@ mGWAccount[api_,element_:"",OptionsPattern[{"Format" -> "Association"}]] :=
                                                             ""
                                                         ]), {"access_token" -> api}];
         Which[
-        element == "Wallet", If[OptionValue["Format"] == "Association", (#["id"] -> #["value"] & /@ Association /@ data[]) // Association, data],
+        element == "Wallet", If[ OptionValue["Format"] == "Association",
+                                 (#["id"] -> #["value"] & /@ Association /@ data[]) // Association,
+                                 data
+                             ],
         element == "", data[],
         True, $Failed
         ]
@@ -164,11 +170,11 @@ mGWAccount[api_,element_:"",OptionsPattern[{"Format" -> "Association"}]] :=
 
 (* ::Subsection:: *)
 (*Material Storage*)
-mGWMats[api_] := 
- Dataset[Association /@ 
-   URLExecute[
-    "https://api.guildwars2.com/v2/account/materials", \
-{"access_token" -> api}]]
+mGWMats[api_] :=
+    Dataset[Association /@ 
+      URLExecute[
+       "https://api.guildwars2.com/v2/account/materials", \
+    {"access_token" -> api}]]
 
 (* ::Section:: *)
 (* Trading Post *)
