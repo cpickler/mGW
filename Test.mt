@@ -79,7 +79,7 @@ Test[
 ]
 
 Test[
-	ListQ[mGWAccount["C53020FE-F672-514F-B5C9-D7C209927B91CC796525-2980-4FD6-8B85-3C9D96BFCD4E", "Invalid" -> "Wallet"]]
+	AssociationQ[mGWAccount["C53020FE-F672-514F-B5C9-D7C209927B91CC796525-2980-4FD6-8B85-3C9D96BFCD4E","Wallet", "Invalid" -> "Invalid"]]
 	,
 	True
 	,
