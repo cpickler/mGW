@@ -145,19 +145,22 @@ mGWInvCount[api_, character_] := Module[{data},
     "https://api.guildwars2.com/v2/account", \
 {"access_token" -> api}]*)
 
-mGWAccount[api_,element_:"",OptionsPattern[{"Format" -> "Association"}]] :=
+mGWAccount[api_,element_:"",OptionsPattern[{"Format" -> "Default"}]] :=
     Module[ {data, format},
-    	format = OptionValue["Format"];
+        format = OptionValue["Format"];
         data[] :=
             data[] =
             URLExecute[
-           StringTrim[ "https://api.guildwars2.com/v2/" <> StringRiffle[{"Account", element}, "/"],("/")], {"access_token" -> api}];
+            StringTrim[ "https://api.guildwars2.com/v2/" <> StringRiffle[{"Account", element}, "/"],("/")], {"access_token" -> api}];
         Which[
         format == "Raw", data[],
-        element == "Wallet", If[format == "Association",
-                                 (#["id"] -> #["value"] & /@ Association /@ data[]) // Association,
-                                 data[]
+        element == "Wallet", Which[(format == "Association"||format == "Default"),
+                                    (#["id"] -> #["value"] & /@ Association /@ data[]) // Association,
+                                 True, data[]
                              ],
+        element == "Achievements", Which[
+                (format == "Default"||format == "Dataset"), Dataset[Association /@ data[]][All, {"id", "done", "bits", "current","max"}],
+        True, data[]],
         element == "", data[],
         True, $Failed
         ]
