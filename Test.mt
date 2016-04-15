@@ -87,3 +87,19 @@ Test[
 	,
 	TestID->"Test-20160413-M3O1Q6"
 ]
+
+Test[
+	mGWAccount["C53020FE-F672-514F-B5C9-D7C209927B91CC796525-2980-4FD6-8B85-3C9D96BFCD4E", "Achievements"][Select[#id == 11 &], "max"][[1]]
+	,
+	1000
+	,
+	TestID->"Test-20160414-L5X6T5"
+]
+
+Test[
+	mGWAccount["C53020FE-F672-514F-B5C9-D7C209927B91CC796525-2980-4FD6-8B85-3C9D96BFCD4E", "Achievements", "Format" -> "Dataset"][Select[#id == 11 &], "max"][[1]]
+	,
+	1000
+	,
+	TestID->"Test-20160414-L5C7A0"
+]
