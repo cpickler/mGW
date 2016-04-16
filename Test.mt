@@ -57,5 +57,13 @@ Test[
 	,
 	True
 	,
-	TestID->"Test-20160411-L1P7L8"
+	TestID -> "Test-20160411-L1P7L8"
+]
+
+Test[
+	mGWColors[][Select[ #name == "Ivory" &], "item"][[1]]
+	,
+	20411
+	,
+	TestID -> "Test-20160416-L5L6A0"
 ]
