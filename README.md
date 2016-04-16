@@ -1,6 +1,6 @@
-# mGW
+# mGW - Mathematica Plugin for Guild Wars 2
 
-[![Stories in Ready](https://badge.waffle.io/cpickler/mGW.png?label=ready&title=Ready)](http://waffle.io/cpickler/mGW)
+[![Throughput Graph](https://graphs.waffle.io/cpickler/mGW/throughput.svg)](https://waffle.io/cpickler/mGW/metrics)
 
 Place holder ReadMe with AreanaNet's Copyright information. More detailed ReadMe to be added later. <3
 
