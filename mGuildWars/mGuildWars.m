@@ -37,8 +37,12 @@ mGWAchievements::usage =
 	mGWAchievements[{ids}, \"Element\"] returns the unformated information for the given ids. \
 		Options for element are \"Groups\", \"Catagories\" and \"Dailies\""
 
+mGWColors::usage="mGWColors[] returns a dataset of the dyes"
+
 Begin["`Private`"]
 (* Implementation of the package *)
+
+Needs["GeneralUtilities`"]
 
 (* ::Section:: *)
 (* Items *)
@@ -194,6 +198,25 @@ mGWAchievements[element_] :=
 mGWAchievements[id_, element_] :=
     URLExecute[
      "Https://api.guildwars2.com/v2/achievements/" <> element, {"ids" -> StringRiffle[id , ","], "Groups"}]
+
+
+
+(* ::Section:: *)
+(* Misc. *)
+
+mGWColors[] :=
+    mGWColors[] = Module[ {cc,bcc},
+                    cc[in_] :=
+                        RGBColor[in[["rgb"]]/255];
+                    bcc[in_] :=
+                        RGBColor[in/255];
+                    Dataset[ToAssociations[("colors" /. 
+                     URLExecute[
+                      "https://api.guildwars2.com/v1/colors.json"])]][All, {"leather" \
+                    -> cc, "metal" -> cc, "cloth" -> cc, 
+                    "base_rgb" -> bcc}]
+                ]
+
 
 (* ::Section:: *)
 (* Footer *)
